@@ -1,0 +1,318 @@
+Грамматика
+
+    0 $accept: START $end
+
+    1 START: MAP
+
+    2 MAP: M_BEGIN M_END
+    3    | M_BEGIN MEMBERS M_END
+
+    4 MEMBERS: PAIR
+    5        | PAIR COMMA MEMBERS
+
+    6 PAIR: STRING COLON VALUE
+
+    7 SEQ: S_BEGIN S_END
+    8    | S_BEGIN ELEMENTS S_END
+
+    9 ELEMENTS: VALUE
+   10         | VALUE COMMA ELEMENTS
+
+   11 VALUE: STRING
+   12      | NUMBER
+   13      | MAP
+   14      | SEQ
+   15      | TRUE_
+   16      | FALSE_
+   17      | null
+
+
+Терминальные символы с правилами, в которых они появляются
+
+    $end (0) 0
+    error (256)
+    NUMBER <number_t> (258) 12
+    STRING <std::string> (259) 6 11
+    TRUE_ <bool> (260) 15
+    FALSE_ <bool> (261) 16
+    null <std::monostate> (262) 17
+    M_BEGIN (263) 2 3
+    M_END (264) 2 3
+    S_BEGIN (265) 7 8
+    S_END (266) 7 8
+    COMMA (267) 5 10
+    COLON (268) 6
+
+
+Нетерминальные символы с правилами, в которых они появляются
+
+    $accept (14)
+        on left: 0
+    START (15)
+        on left: 1
+        on right: 0
+    MAP <map_t> (16)
+        on left: 2 3
+        on right: 1 13
+    MEMBERS <map_t> (17)
+        on left: 4 5
+        on right: 3 5
+    PAIR <map_t> (18)
+        on left: 6
+        on right: 4 5
+    SEQ <seq_t> (19)
+        on left: 7 8
+        on right: 14
+    ELEMENTS <seq_t> (20)
+        on left: 9 10
+        on right: 8 10
+    VALUE <node> (21)
+        on left: 11 12 13 14 15 16 17
+        on right: 6 9 10
+
+
+Состояние 0
+
+    0 $accept: • START $end
+
+    M_BEGIN  сдвиг, и переход в состояние 1
+
+    START  переход в состояние 2
+    MAP    переход в состояние 3
+
+
+Состояние 1
+
+    2 MAP: M_BEGIN • M_END
+    3    | M_BEGIN • MEMBERS M_END
+
+    STRING  сдвиг, и переход в состояние 4
+    M_END   сдвиг, и переход в состояние 5
+
+    MEMBERS  переход в состояние 6
+    PAIR     переход в состояние 7
+
+
+Состояние 2
+
+    0 $accept: START • $end
+
+    $end  сдвиг, и переход в состояние 8
+
+
+Состояние 3
+
+    1 START: MAP •
+
+    $default  вывод с использованием правила 1 (START)
+
+
+Состояние 4
+
+    6 PAIR: STRING • COLON VALUE
+
+    COLON  сдвиг, и переход в состояние 9
+
+
+Состояние 5
+
+    2 MAP: M_BEGIN M_END •
+
+    $default  вывод с использованием правила 2 (MAP)
+
+
+Состояние 6
+
+    3 MAP: M_BEGIN MEMBERS • M_END
+
+    M_END  сдвиг, и переход в состояние 10
+
+
+Состояние 7
+
+    4 MEMBERS: PAIR •
+    5        | PAIR • COMMA MEMBERS
+
+    COMMA  сдвиг, и переход в состояние 11
+
+    $default  вывод с использованием правила 4 (MEMBERS)
+
+
+Состояние 8
+
+    0 $accept: START $end •
+
+    $default  принять
+
+
+Состояние 9
+
+    6 PAIR: STRING COLON • VALUE
+
+    NUMBER   сдвиг, и переход в состояние 12
+    STRING   сдвиг, и переход в состояние 13
+    TRUE_    сдвиг, и переход в состояние 14
+    FALSE_   сдвиг, и переход в состояние 15
+    null     сдвиг, и переход в состояние 16
+    M_BEGIN  сдвиг, и переход в состояние 1
+    S_BEGIN  сдвиг, и переход в состояние 17
+
+    MAP    переход в состояние 18
+    SEQ    переход в состояние 19
+    VALUE  переход в состояние 20
+
+
+Состояние 10
+
+    3 MAP: M_BEGIN MEMBERS M_END •
+
+    $default  вывод с использованием правила 3 (MAP)
+
+
+Состояние 11
+
+    5 MEMBERS: PAIR COMMA • MEMBERS
+
+    STRING  сдвиг, и переход в состояние 4
+
+    MEMBERS  переход в состояние 21
+    PAIR     переход в состояние 7
+
+
+Состояние 12
+
+   12 VALUE: NUMBER •
+
+    $default  вывод с использованием правила 12 (VALUE)
+
+
+Состояние 13
+
+   11 VALUE: STRING •
+
+    $default  вывод с использованием правила 11 (VALUE)
+
+
+Состояние 14
+
+   15 VALUE: TRUE_ •
+
+    $default  вывод с использованием правила 15 (VALUE)
+
+
+Состояние 15
+
+   16 VALUE: FALSE_ •
+
+    $default  вывод с использованием правила 16 (VALUE)
+
+
+Состояние 16
+
+   17 VALUE: null •
+
+    $default  вывод с использованием правила 17 (VALUE)
+
+
+Состояние 17
+
+    7 SEQ: S_BEGIN • S_END
+    8    | S_BEGIN • ELEMENTS S_END
+
+    NUMBER   сдвиг, и переход в состояние 12
+    STRING   сдвиг, и переход в состояние 13
+    TRUE_    сдвиг, и переход в состояние 14
+    FALSE_   сдвиг, и переход в состояние 15
+    null     сдвиг, и переход в состояние 16
+    M_BEGIN  сдвиг, и переход в состояние 1
+    S_BEGIN  сдвиг, и переход в состояние 17
+    S_END    сдвиг, и переход в состояние 22
+
+    MAP       переход в состояние 18
+    SEQ       переход в состояние 19
+    ELEMENTS  переход в состояние 23
+    VALUE     переход в состояние 24
+
+
+Состояние 18
+
+   13 VALUE: MAP •
+
+    $default  вывод с использованием правила 13 (VALUE)
+
+
+Состояние 19
+
+   14 VALUE: SEQ •
+
+    $default  вывод с использованием правила 14 (VALUE)
+
+
+Состояние 20
+
+    6 PAIR: STRING COLON VALUE •
+
+    $default  вывод с использованием правила 6 (PAIR)
+
+
+Состояние 21
+
+    5 MEMBERS: PAIR COMMA MEMBERS •
+
+    $default  вывод с использованием правила 5 (MEMBERS)
+
+
+Состояние 22
+
+    7 SEQ: S_BEGIN S_END •
+
+    $default  вывод с использованием правила 7 (SEQ)
+
+
+Состояние 23
+
+    8 SEQ: S_BEGIN ELEMENTS • S_END
+
+    S_END  сдвиг, и переход в состояние 25
+
+
+Состояние 24
+
+    9 ELEMENTS: VALUE •
+   10         | VALUE • COMMA ELEMENTS
+
+    COMMA  сдвиг, и переход в состояние 26
+
+    $default  вывод с использованием правила 9 (ELEMENTS)
+
+
+Состояние 25
+
+    8 SEQ: S_BEGIN ELEMENTS S_END •
+
+    $default  вывод с использованием правила 8 (SEQ)
+
+
+Состояние 26
+
+   10 ELEMENTS: VALUE COMMA • ELEMENTS
+
+    NUMBER   сдвиг, и переход в состояние 12
+    STRING   сдвиг, и переход в состояние 13
+    TRUE_    сдвиг, и переход в состояние 14
+    FALSE_   сдвиг, и переход в состояние 15
+    null     сдвиг, и переход в состояние 16
+    M_BEGIN  сдвиг, и переход в состояние 1
+    S_BEGIN  сдвиг, и переход в состояние 17
+
+    MAP       переход в состояние 18
+    SEQ       переход в состояние 19
+    ELEMENTS  переход в состояние 27
+    VALUE     переход в состояние 24
+
+
+Состояние 27
+
+   10 ELEMENTS: VALUE COMMA ELEMENTS •
+
+    $default  вывод с использованием правила 10 (ELEMENTS)
