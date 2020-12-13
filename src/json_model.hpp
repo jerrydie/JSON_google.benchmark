@@ -79,6 +79,8 @@ public:
     json(map_t obj): node(std::move(obj)){};
 };
 
+extern json generate_json(std::size_t cout_elements, std::size_t max_depth=5);
+
 }
 #endif // JSON_MODEL_HPP
 
