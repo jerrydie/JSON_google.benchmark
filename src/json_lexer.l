@@ -1,24 +1,22 @@
+%option c++
 %{
     #include <iostream>
     #include <string>
     #include <exception>
     #include "json_model.hpp"
-    //#include "json.tab.h"
-    enum class token {
-	    	STRING,
-	    	NUMBER,
-	    	M_BEGIN,
-	    	M_END,
-	    	TRUE_,
-	    	FALSE_,
-	    	NULL_,
-	    	S_BEGIN,
-	    	S_END,
-	    	COMMA,
-	    	COLON
-	};
-    #define YY_DECL int yylex( hse::model::node::storage_t* yylval, void * )
+    #include "json_parser.tab.hpp"
+    #include "CustomDriver.hpp"
+    #include "CustomScanner.hpp"
+    #include <sstream>
+    
+    using token=hse::model::CustomParser::token;
+    #define yyterminate() return hse::model::CustomParser::symbol_type(token::END, *loc)
 %}
+
+%option noyywrap nounput noinput batch debug
+%option yyclass="hse::model::CustomScanner"
+
+
 DIGIT1to9 [1-9]
 DIGIT [0-9]
 DIGITS {DIGIT}+
@@ -27,7 +25,7 @@ FRAC [.]{DIGITS}
 EXP {E}{DIGITS}
 E [eE][+-]?
 HEX_DIGIT [0-9a-f]
-NUMBER {INT}|{INT}{FRAC}|{INT}{EXP}|{INT}{FRAC}{EXP}
+FLOAT {INT}{FRAC}|{INT}{EXP}|{INT}{FRAC}{EXP}|{FRAC}
 UNESCAPEDCHAR [ -!#-\[\]-~]
 ESCAPEDCHAR \\[\"\\bfnrt/]
 UNICODECHAR \\u{HEX_DIGIT}{HEX_DIGIT}{HEX_DIGIT}{HEX_DIGIT}
@@ -35,57 +33,62 @@ CHAR {UNESCAPEDCHAR}|{ESCAPEDCHAR}|{UNICODECHAR}
 CHARS {CHAR}+
 DBL_QUOTE [\"]
 
+
+
 %%
 
 {DBL_QUOTE}{DBL_QUOTE} |
 {DBL_QUOTE}{CHARS}{DBL_QUOTE} { //empty or not empty key or string
-    yylval->emplace<std::string>(std::string (yytext));
-    return static_cast<int>(token::STRING);
+    std::string str(yytext);
+    str.erase(str.begin());
+    str.pop_back();
+    return hse::model::CustomParser::make_STRING(str, *loc);
 };
 
-{NUMBER} { // int_ or float_
+{INT} { // int64_t
     std::string text (yytext);
-    yylval->emplace<std::int64_t> (std::stoll (text)); // int + double!!!
-    return static_cast<int>(token::NUMBER);
+    return hse::model::CustomParser::make_INT(std::stoll (text), *loc);
 };
 
-true { // bool_
-    yylval->emplace<bool> (true);
-    return static_cast<int>(token::TRUE_);
+{FLOAT} { // double
+    std::string text (yytext);
+    return hse::model::CustomParser::make_FLOAT(std::stod (text), *loc);
 };
 
-false { // bool_
-    yylval->emplace<bool> (false);
-    return static_cast<int>(token::FALSE_);
+true { // bool
+    return hse::model::CustomParser::make_TRUE_(true, *loc);
 };
 
-null { // NULL_
-    //yylval->emplace<> (std::monostate);
-    return static_cast<int>(token::NULL_);
+false { // bool
+    return hse::model::CustomParser::make_FALSE_(false, *loc);
+};
+
+null { // null
+    return hse::model::CustomParser::make_null(std::monostate{}, *loc);
 };
 
 \{ { // begin a map
-    return static_cast<int>(token::M_BEGIN);
+    return hse::model::CustomParser::make_M_BEGIN(*loc);
 };
 
 \} { // end a map
-    return static_cast<int>(token::M_END);
+    return hse::model::CustomParser::make_M_END(*loc);
 };
 
 \[ { // begin a seq
-    return static_cast<int>(token::S_BEGIN);
+    return hse::model::CustomParser::make_S_BEGIN(*loc);
 };
 
 \] { // end a seq
-    return static_cast<int>(token::S_END);
+    return hse::model::CustomParser::make_S_END(*loc);
 };
 
 , {
-    return static_cast<int>(token::COMMA);
+    return hse::model::CustomParser::make_COMMA(*loc);
 };
 
 : {
-    return static_cast<int>(token::COLON);
+    return hse::model::CustomParser::make_COLON(*loc);
 };
 
 [ \t\n\r]+ ; // ignore whitespace

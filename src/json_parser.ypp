@@ -1,46 +1,73 @@
+%skeleton "lalr1.cc"
+%require "3.7"
+%language "c++"
+%defines
+%define api.namespace {hse::model}
+%define api.parser.class {CustomParser}
+%define api.token.raw
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
+%define parse.trace
+%define parse.error detailed
+%define parse.lac full
 %{
-    #include <iostream>
-    #include <string>
-    #include <variant>
     #include "json_model.hpp"
-    using namespace hse::model;
-    using number_t = std::variant<std::int64_t, double>;
-    #define YYSTYPE char*
-    int yylex( node::storage_t* yylval, void * );
+    namespace hse::model{
+		class CustomDriver;
+		class CustomScanner;
+	}
 %}
 
-%parse-param {json &storage}
-%token <number_t> NUMBER
+%parse-param {CustomScanner& scanner}
+%param { CustomDriver& driver  }
+
+%locations
+
+%code{
+    #include "CustomDriver.hpp"
+    #include "CustomScanner.hpp"
+    #include <iostream>
+    #include <string>
+    #undef YY_DECL
+    #define YY_DECL hse::model::CustomParser::symbol_type hse::model::CustomScanner::yylex(hse::model::CustomDriver& drv)
+}
+
+%token END 0
+%token <std::int64_t> INT
+%token <double> FLOAT
 %token <std::string> STRING
 %token <bool> TRUE_ FALSE_
 %token <std::monostate> null
 %left M_BEGIN M_END S_BEGIN S_END
 %left COMMA
 %left COLON
-%type <map_t> MAP
-%type <map_t> PAIR
-%type <map_t> 	MEMBERS
-%type <seq_t> SEQ
-%type <seq_t> ELEMENTS
-%type <node> VALUE
+%type <hse::model::map_t> MAP
+%type <hse::model::map_t> PAIR
+%type <hse::model::map_t> MEMBERS
+%type <hse::model::seq_t> SEQ
+%type <hse::model::seq_t> ELEMENTS
+%type <hse::model::node> VALUE
+
 %%
 
 START: MAP {
-    storage = json($1);
+    driver.result = json($1);
   }
 ;
 MAP: M_BEGIN M_END {
     $$ = map_t {};
   }
 | M_BEGIN MEMBERS M_END {
-    $$ = $2;
+    $$ = map_t {$2};
   }
 ;
 MEMBERS: PAIR {
     $$ = $1;
   }
 | PAIR COMMA MEMBERS {
-    $$ = $3.merge($1);
+    $$.merge($1);
+    $$.merge($3);
   }
 ;
 PAIR: STRING COLON VALUE {
@@ -58,18 +85,19 @@ ELEMENTS: VALUE {
     $$ = seq_t{$1};
   }
 | VALUE COMMA ELEMENTS {
-    $3.reserve( $1.size() + $3.size() );
-    $$ = $3.insert( $3.end(), $1.begin(), $1.end() );
+    $3.push_back( $1 );
+    $$ = $3;
   }
 ;
 VALUE: 
-  STRING {$$=node(yylval);}
-| NUMBER {$$=node(yylval);}
+  STRING {$$=node($1);}
+| INT {$$=node($1);}
+| FLOAT {$$=node($1);}
 | MAP {$$=node($1);}
 | SEQ {$$=node($1);}
 | TRUE_ {$$=node(true);}
 | FALSE_ {$$=node(false);}
-| null {$$=node(std::monostate);}
+| null {$$=node{};}
 ;
 
 %%
