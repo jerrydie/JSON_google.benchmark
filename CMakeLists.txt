@@ -11,3 +11,7 @@ add_executable(${PROJECT_NAME}
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+
+find_package(benchmark REQUIRED)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE benchmark::benchmark)

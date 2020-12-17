@@ -196,6 +196,8 @@ extern json generate_json(std::size_t elements, std::size_t max_depth)
     return json{generate_map(0, max_depth, elements)};
 }
 
-
+extern void set_prng_seed(std::size_t s) {
+    prng.seed(s);
+}
 
 }
