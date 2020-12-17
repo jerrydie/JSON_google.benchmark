@@ -1,6 +1,7 @@
 build
-*.yy.cc
+*.yy.c*
 *.gv
 *.tab.?pp
 *.hh
+*.output
 
