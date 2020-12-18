@@ -19,8 +19,8 @@ namespace hse::model{
         }
 
         using FlexLexer::yylex;
-
-        virtual hse::model::CustomParser::symbol_type yylex(hse::model::CustomDriver& driver);
+        //hse::model::CustomParser::symbol_type yylex();
+        int yylex(hse::model::CustomParser::semantic_type * lval, hse::model::CustomParser::location_type * location);
 
         CustomParser::semantic_type *yylval = nullptr;
 

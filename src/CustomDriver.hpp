@@ -17,14 +17,12 @@ namespace hse::model{
         int parse(std::istream& stream);
         hse::model::location location;
 
-        CustomParser* parser = nullptr;
-        CustomScanner* scanner = nullptr;
-
     };
 
 }
 
-#undef YY_DECL
-#define YY_DECL hse::model::CustomParser::symbol_type hse::model::CustomScanner::yylex(hse::model::CustomDriver& driver)
+/*#undef YY_DECL
+#define YY_DECL hse::model::CustomParser::symbol_type yylex(hse::model::CustomDriver& driver)
+YY_DECL;*/
 
 #endif //JSON_PARSER_CUSTOMDRIVER_HPP

@@ -5,7 +5,6 @@
 %define api.namespace {hse::model}
 %define api.parser.class {CustomParser}
 %define api.token.raw
-%define api.token.constructor
 %define api.value.type variant
 %define parse.assert
 %define parse.trace
@@ -22,13 +21,15 @@
 }
 
 %parse-param {CustomScanner& scanner}
-%param {CustomDriver& driver}
+%parse-param {CustomDriver& driver}
 
 %locations
 
 %code {
     #include "CustomScanner.hpp"
-    #include "CustomDriver.hpp"   
+    #include "CustomDriver.hpp"
+    #undef yylex
+    #define yylex scanner.yylex   
 }
 
 %token END 0
