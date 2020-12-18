@@ -6,14 +6,14 @@
 %define api.parser.class {CustomParser}
 %define api.token.raw
 %define api.value.type variant
-%define parse.assert
 %define parse.trace
-%define parse.error detailed
-%define parse.lac full
+%debug
+
 %code requires{
     #include "json_model.hpp"
     #include <iostream>
     #include <string>
+    #include <variant>
     namespace hse::model{
 		class CustomDriver;
 		class CustomScanner;
@@ -26,6 +26,7 @@
 %locations
 
 %code {
+    #include <iostream>
     #include "CustomScanner.hpp"
     #include "CustomDriver.hpp"
     #undef yylex
@@ -58,15 +59,15 @@ MAP: M_BEGIN M_END {
     $$ = map_t {};
   }
 | M_BEGIN MEMBERS M_END {
-    $$ = map_t {$2};
+    $$ = $2;
   }
 ;
 MEMBERS: PAIR {
     $$ = $1;
   }
-| PAIR COMMA MEMBERS {
-    $$.merge($1);
-    $$.merge($3);
+|  MEMBERS COMMA PAIR {
+    $1.merge($3);
+    $$ = $1;
   }
 ;
 PAIR: STRING COLON VALUE {
@@ -83,9 +84,9 @@ SEQ: S_BEGIN S_END {
 ELEMENTS: VALUE {
     $$ = seq_t{$1};
   }
-| VALUE COMMA ELEMENTS {
-    $3.push_back( $1 );
-    $$ = $3;
+|  ELEMENTS COMMA VALUE {
+    $1.push_back( $3 );
+    $$ = $1;
   }
 ;
 VALUE: 

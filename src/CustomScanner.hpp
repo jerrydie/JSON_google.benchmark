@@ -1,7 +1,7 @@
 
 #ifndef JSON_PARSER_CUSTTOMSCANNER_HPP
 #define JSON_PARSER_CUSTTOMSCANNER_HPP
-
+#include <iostream>
 #if ! defined(yyFlexLexerOnce)
 #include <FlexLexer.h>
 #endif
@@ -9,6 +9,8 @@
 #include "json_parser.tab.hpp" //needed
 #include "location.hh"
 #include "json_model.hpp"
+
+
 
 namespace hse::model{
     class CustomDriver; // needed
@@ -25,6 +27,8 @@ namespace hse::model{
         CustomParser::semantic_type *yylval = nullptr;
 
         CustomParser::location_type *loc = nullptr;
+
+        ~CustomScanner(){delete loc;}
 };
 }
 
