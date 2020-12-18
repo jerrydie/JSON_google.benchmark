@@ -1,14 +1,13 @@
 #ifndef JSON_PARSER_CUSTOMDRIVER_HPP
 #define JSON_PARSER_CUSTOMDRIVER_HPP
 
+#include "json_model.hpp"
 #include "json_parser.tab.hpp"
 #include "CustomScanner.hpp"
-#include "json_model.hpp"
 #include <string>
 
 
 namespace hse::model{
-
     class CustomDriver {
     public:
         CustomDriver(){}
@@ -24,7 +23,8 @@ namespace hse::model{
     };
 
 }
+
 #undef YY_DECL
-#define YY_DECL hse::model::CustomParser::symbol_type hse::model::CustomScanner::yylex(hse::model::CustomDriver& drv)
+#define YY_DECL hse::model::CustomParser::symbol_type hse::model::CustomScanner::yylex(hse::model::CustomDriver& driver)
 
 #endif //JSON_PARSER_CUSTOMDRIVER_HPP

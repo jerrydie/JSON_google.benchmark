@@ -6,12 +6,12 @@
 #include <FlexLexer.h>
 #endif
 
-#include "json_parser.tab.hpp"
+#include "json_parser.tab.hpp" //needed
 #include "location.hh"
 #include "json_model.hpp"
 
 namespace hse::model{
-    class CustomDriver;
+    class CustomDriver; // needed
     class CustomScanner: public yyFlexLexer {
     public:
         CustomScanner(std::istream *in): yyFlexLexer(in) {
@@ -20,7 +20,7 @@ namespace hse::model{
 
         using FlexLexer::yylex;
 
-        virtual CustomParser::symbol_type yylex(hse::model::CustomDriver& driver);
+        virtual hse::model::CustomParser::symbol_type yylex(hse::model::CustomDriver& driver);
 
         CustomParser::semantic_type *yylval = nullptr;
 

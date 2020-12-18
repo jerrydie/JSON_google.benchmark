@@ -6,11 +6,10 @@
     #include "json_model.hpp"
     #include "json_parser.tab.hpp"
     #include "CustomDriver.hpp"
-    #include "CustomScanner.hpp"
     #include <sstream>
     
-    using token=hse::model::CustomParser::token;
-    #define yyterminate() return hse::model::CustomParser::symbol_type(token::END, *loc)
+    #define yyterminate() return hse::model::CustomParser::symbol_type(hse::model::CustomParser::token::END, *loc)
+    
 %}
 
 %option noyywrap nounput noinput batch debug

@@ -1,6 +1,5 @@
 
 #include "CustomDriver.hpp"
-#include "json_parser.tab.hpp"
 
 namespace hse::model{
 

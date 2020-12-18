@@ -11,26 +11,24 @@
 %define parse.trace
 %define parse.error detailed
 %define parse.lac full
-%{
+%code requires{
     #include "json_model.hpp"
+    #include <iostream>
+    #include <string>
     namespace hse::model{
 		class CustomDriver;
 		class CustomScanner;
 	}
-%}
+}
 
 %parse-param {CustomScanner& scanner}
-%param { CustomDriver& driver  }
+%param {CustomDriver& driver}
 
 %locations
 
-%code{
-    #include "CustomDriver.hpp"
+%code {
     #include "CustomScanner.hpp"
-    #include <iostream>
-    #include <string>
-    #undef YY_DECL
-    #define YY_DECL hse::model::CustomParser::symbol_type hse::model::CustomScanner::yylex(hse::model::CustomDriver& drv)
+    #include "CustomDriver.hpp"   
 }
 
 %token END 0
