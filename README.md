@@ -8,5 +8,8 @@
 ## Резултат
 Результаты замеров предоставлены в output.txt, график на основе полученных данных выглядит следующим образом (шкала логарифмическая):
 
-![Result plot](/plot.jpeg)
+![log result plot](/plot.jpeg)
 
+В loglog:
+
+![loglog result plot](/loglogplot.jpeg)
