@@ -1,0 +1,17 @@
+-----------------------------------------------------------------
+Benchmark                       Time             CPU   Iterations
+-----------------------------------------------------------------
+BM_json_output/10/5        223261 ns       223363 ns         3039
+BM_json_output/50/5       1470542 ns      1470606 ns          476
+BM_json_output/100/5      3351821 ns      3351785 ns          210
+BM_json_output/500/5     20268578 ns     20256232 ns           35
+BM_json_output/1000/5    40774679 ns     40748680 ns           17
+BM_json_output/5000/5   225270422 ns    225246819 ns            3
+BM_json_output/10000/5  447689629 ns    447655839 ns            2
+BM_json_parse/10/5        3939616 ns      3939983 ns          178
+BM_json_parse/50/5       24937889 ns     24938324 ns           28
+BM_json_parse/100/5      55136181 ns     55126386 ns           13
+BM_json_parse/500/5     321093277 ns    320679252 ns            2
+BM_json_parse/1000/5    640576539 ns    640466751 ns            1
+BM_json_parse/5000/5   3395422818 ns   3395089076 ns            1
+BM_json_parse/10000/5  6906200279 ns   6904583981 ns            1
