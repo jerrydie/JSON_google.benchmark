@@ -46,7 +46,7 @@ DBL_QUOTE [\"]
     std::string str(yytext);
     str.erase(str.begin());
     str.pop_back();
-    //yylval->build<std::string> (str);
+    yylval->build<std::string> (str);
     return hse::model::CustomParser::token::STRING;//make_STRING(str, *loc);
 };
 
