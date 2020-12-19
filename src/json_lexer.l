@@ -3,10 +3,12 @@
     #include <iostream>
     #include <string>
     #include <exception>
+    #include <sstream>
+
     #include "json_model.hpp"
     #include "json_parser.tab.hpp"
     #include "CustomDriver.hpp"
-    #include <sstream>
+
     #undef YY_DECL
     #define YY_DECL int \
         hse::model::CustomScanner::yylex(hse::model::CustomParser::semantic_type * lval, hse::model::CustomParser::location_type * location)

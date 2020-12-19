@@ -1,7 +1,9 @@
 
 #ifndef JSON_PARSER_CUSTTOMSCANNER_HPP
 #define JSON_PARSER_CUSTTOMSCANNER_HPP
-#include <iostream>
+
+#include <memory>
+
 #if ! defined(yyFlexLexerOnce)
 #include <FlexLexer.h>
 #endif
@@ -13,22 +15,23 @@
 
 
 namespace hse::model{
+
     class CustomDriver; // needed
+
     class CustomScanner: public yyFlexLexer {
+
+        using sem_t = CustomParser::semantic_type;
+        using loc_t = CustomParser::location_type;
+
+        std::unique_ptr<loc_t> loc_ptr = std::make_unique<loc_t>();
     public:
-        CustomScanner(std::istream *in): yyFlexLexer(in) {
-            loc = new CustomParser::location_type();
-        }
+        CustomScanner(std::istream& in): yyFlexLexer(&in) {}
 
-        using FlexLexer::yylex;
-        //hse::model::CustomParser::symbol_type yylex();
-        int yylex(hse::model::CustomParser::semantic_type * lval, hse::model::CustomParser::location_type * location);
+        int yylex(sem_t* lval, loc_t* location);
 
-        CustomParser::semantic_type *yylval = nullptr;
+        loc_t* loc = loc_ptr.get();
+        sem_t* yylval = nullptr;
 
-        CustomParser::location_type *loc = nullptr;
-
-        ~CustomScanner(){delete loc;}
 };
 }
 
