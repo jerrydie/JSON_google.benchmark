@@ -8,9 +8,9 @@
 #include <FlexLexer.h>
 #endif
 
+#include "json_model.hpp"
 #include "json_parser.tab.hpp" //needed
 #include "location.hh"
-#include "json_model.hpp"
 
 
 

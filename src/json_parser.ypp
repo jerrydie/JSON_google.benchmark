@@ -51,22 +51,22 @@
 %%
 
 START: MAP {
-    driver.result = json($1);
+    driver.result = json(std::move($1));
   }
 ;
 MAP: M_BEGIN M_END {
     $$ = map_t {};
   }
 | M_BEGIN MEMBERS M_END {
-    $$ = $2;
+    $$ = std::move($2);
   }
 ;
 MEMBERS: PAIR {
-    $$ = $1;
+    $$ = std::move($1);
   }
 |  MEMBERS COMMA PAIR {
     $1.merge($3);
-    $$ = $1;
+    $$ = std::move($1);
   }
 ;
 PAIR: STRING COLON VALUE {
@@ -77,7 +77,7 @@ SEQ: S_BEGIN S_END {
     $$ = seq_t {};
   }
 | S_BEGIN ELEMENTS S_END {
-    $$ = $2;
+    $$ = std::move($2);
 }
 ;
 ELEMENTS: VALUE {
@@ -85,18 +85,18 @@ ELEMENTS: VALUE {
   }
 |  ELEMENTS COMMA VALUE {
     $1.push_back( $3 );
-    $$ = $1;
+    $$ = std::move($1);
   }
 ;
 VALUE: 
-  STRING {$$=node($1);}
-| INT {$$=node($1);}
-| FLOAT {$$=node($1);}
-| MAP {$$=node($1);}
-| SEQ {$$=node($1);}
-| TRUE_ {$$=node(true);}
-| FALSE_ {$$=node(false);}
-| null {$$=node{};}
+  STRING {$$=std::move(node($1));}
+| INT    {$$=std::move(node($1));}
+| FLOAT  {$$=std::move(node($1));}
+| MAP    {$$=std::move(node($1));}
+| SEQ    {$$=std::move(node($1));}
+| TRUE_  {$$=std::move(node(true));}
+| FALSE_ {$$=std::move(node(false));}
+| null   {$$=std::move(node{});}
 ;
 
 %%

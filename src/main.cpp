@@ -7,20 +7,20 @@
 #include <fstream>
 
 
-int main()
-{
+//int main()
+//{
 
-    hse::model::json my_data = hse::model::generate_json(5);
-    std::ostringstream os;
-    os << my_data;
-    std::istringstream ss (os.str());
-    hse::model::CustomDriver fuck;
-    fuck.parse(ss);
-    std::cout << fuck.result;
+//    hse::model::json my_data = hse::model::generate_json(5);
+//    std::ostringstream os;
+//    os << my_data;
+//    std::istringstream ss (os.str());
+//    hse::model::CustomDriver fuck;
+//    fuck.parse(ss);
+//    std::cout << fuck.result;
     
-}
+//}
 
-/*
+
 #include <benchmark/benchmark.h>
 void save_data(const hse::model::json & data, std::size_t elements, std::size_t max_depth){
   std::ostringstream ss;
@@ -93,8 +93,3 @@ BENCHMARK(BM_json_parse)
     ->Args({10000, 5});
 
 BENCHMARK_MAIN();
-
-
-
-
-*/
